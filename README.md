@@ -1,4 +1,4 @@
-# Contest-OIBC2025-Solar-Irradiance-Prediction
+# OIBC2025-Solar-Irradiance-Prediction
 
 **OIBC 2025 : 일사량 센서가 없는 태양광 발전소의 일사량 예측**
 
@@ -6,7 +6,6 @@
 
 | 항목 | 내용 |
 |---|---|
-| 최종 순위 | **20위** |
 | 데이터 특성 | 5분 간격 1년치(105,120 스텝), 좌표는 익명화된 `coord1/coord2`, train/test 가 **같은 기간·다른 발전소** |
 | 예측 대상 | test 발전소 27개 (train 183개 발전소는 `nins` 제공) |
 | 접근 | 좌표 시각화 → LightGBM(좌표+시간) + **근처 발전소 일사량 앙상블** |
