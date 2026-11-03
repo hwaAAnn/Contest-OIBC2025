@@ -1,0 +1,11 @@
+# 대용량 원본 데이터 / 중간 산출물
+*.csv
+!outputs/cv_results.csv
+cache/
+outputs/submission.csv
+outputs_run.log
+__pycache__/
+.ipynb_checkpoints/
+# 노트북 사본/스크래치
+TSbaseline_multi_model.ipynb
+Untitled-1.ipynb
