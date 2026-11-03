@@ -1,14 +1,16 @@
 """발전소 좌표 시각화: 일사량을 아는 발전소(train) vs 예측 대상 발전소(test).
 
-    python src/plot_map.py --k 3
+    python eda/plot_map.py --k 3
 """
 import argparse
+import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 
-from common import load_data
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from src.data import load_data  # noqa: E402
 
 TRAIN_COLOR, TEST_COLOR = "#1f77b4", "#d62728"
 

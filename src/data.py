@@ -1,4 +1,4 @@
-"""공통 유틸: 데이터 로딩(좌표 단위 일사량 행렬), 이웃 앙상블, 평가 지표.
+"""데이터 로딩: train/test csv -> 좌표 단위 일사량 행렬.
 
 핵심 아이디어
 -------------
@@ -89,29 +89,3 @@ def load_data(data_dir: str | Path = ".", use_cache: bool = True) -> dict:
     test.to_pickle(CACHE_DIR / "test_index.pkl")
     return dict(times=times, src_xy=src_xy, src_Y=Y, src_pv=src_pv,
                 tgt_xy=tgt_xy, tgt_pv=tgt_pv, test=test)
-
-
-# --------------------------------------------------------------------------- 이웃 앙상블
-def neighbor_predict(src_xy, src_Y, tgt_xy, k: int = 3, power: float = 0.0,
-                     eps: float = 1e-3) -> np.ndarray:
-    """가장 가까운 k개 위치의 일사량으로 대상 위치 예측.
-
-    power = 0 : 단순 평균 (우리 팀이 쓴 방식)
-    power > 0 : 거리 역수 가중평균 w = 1 / d^power (1등 팀 방식)
-    """
-    d = np.linalg.norm(tgt_xy[:, None, :] - src_xy[None, :, :], axis=2)   # (Lt, Ls)
-    idx = np.argsort(d, axis=1)[:, :k]
-    dk = np.take_along_axis(d, idx, axis=1)
-    w = np.ones_like(dk) if power == 0 else 1.0 / np.maximum(dk, eps) ** power
-    w = w / w.sum(axis=1, keepdims=True)
-    return np.einsum("lk,lkt->lt", w, src_Y[idx])
-
-
-# --------------------------------------------------------------------------- 평가
-def scores(y_true: np.ndarray, y_pred: np.ndarray, day: np.ndarray | None = None) -> dict:
-    """MAE / RMSE (전체 시각) + 주간(day) MAE."""
-    err = y_pred - y_true
-    out = {"MAE": float(np.abs(err).mean()), "RMSE": float(np.sqrt((err ** 2).mean()))}
-    if day is not None:
-        out["MAE_day"] = float(np.abs(err[:, day]).mean())
-    return out
